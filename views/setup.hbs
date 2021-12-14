@@ -33,8 +33,9 @@
         <img src="/images/ibm_security_black.png">
       </div>
 
+      <!-- if prompt is present then assume the setup must be run --> 
+      {{#if prompt}}
       <h1>Initial Setup</h1>
-
       <form action="/setup" method="post">
         <p>Click "Run Setup" button to perform automated setup of your Verify Tenant.</p>
         <p>Parameters for setup are read from .env file.</p>
@@ -51,6 +52,18 @@
           <div class="clear"></div>
         </div>
       </form>
+      {{/if}}
+
+      {{#if success}}
+      <h1>Initial setup completed.</h1>
+      <p>The app has been successfully setup for your Verify tenant.</p>
+      <p>Click "Go to Home" to start using the app.</p>
+      <div class="formRow-bottom clearfix" style="text-align:center">
+      <div class="clear"></div>
+      <a href="/" class="cta-btn">Go to Home</a>
+      <div class="clear"></div>
+      </div>
+      {{/if}}
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.2/jquery.min.js"></script>

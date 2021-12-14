@@ -6,6 +6,7 @@ var fs = require('fs');
 var os = require('os');
 
 var OpenIDStrategy = require('passport-openidconnect').Strategy;
+const { error } = require('console');
 
 var apiAccessToken;
 
@@ -37,15 +38,12 @@ function setEnvValues(updates) {
 router.get('/', function(req, res, next) {
   if (process.env.ALLOW_DYNAMIC_SETUP == "false") {
     res.render('error', {
-      message: "Dynamic Setup is disabled"
+      message: "Automated setup is disabled by configuration",
+      detail: "ALLOW_DYNAMIC_SETUP is set to false in .env environment file"
     });
   } else {
     res.render('setup', {
-      baseUri: process.env.OIDC_CI_BASE_URI,
-      APIclientId: process.env.API_CLIENT_ID,
-      OIDCclientId: process.env.OIDC_CLIENT_ID,
-      OIDCredirectUri: process.env.OIDC_REDIRECT_URI,
-      MFAgroup: process.env.MFAGROUP
+      prompt: true
     });
   }
 });
@@ -54,7 +52,8 @@ router.get('/', function(req, res, next) {
 router.post('/', async function(req, res, next) {
   if (process.env.ALLOW_DYNAMIC_SETUP == "false") {
     res.render('error', {
-      message: "Dynamic Setup is disabled"
+      message: "Automated setup is disabled by configuration",
+      detail: "ALLOW_DYNAMIC_SETUP is set to false in .env environment file"
     });
   } else {
 
@@ -71,7 +70,7 @@ router.post('/', async function(req, res, next) {
             process.env.OIDC_REDIRECT_URI,
             apiAccessToken);
         } catch (e) {
-          console.log(e);
+          console.log("WARNING: Failed to create app " + process.env.APP_NAME + ". Continuing anyway.");
         }
         try {
           appl = await bbfn.getApplication(process.env.APP_NAME, apiAccessToken);
@@ -313,12 +312,23 @@ router.post('/', async function(req, res, next) {
         if (facebookID) sources.push(facebookID);
         if (cloudId) sources.push(cloudId);
 
-        await bbfn.applyPolicyThemeSources(policyId, themeId, sources, appl, apiAccessToken);
-        console.log("Policy applied to application");
+
+        try {
+          await bbfn.applyPolicyThemeSources(policyId, themeId, sources, appl, apiAccessToken);
+          console.log("Policy applied to application");
+        } catch (e) {
+          console.log("applyPolicyThemeSources threw: " + e);
+          res.render('error', {
+            message: "Failed to apply policy to app " + process.env.APP_NAME,
+            detail: JSON.stringify(e)
+          });
+          return;
+        }
 
         if (themeId) {
           process.env.THEME_ID = themeId;
         }
+
       }
 
       passport.use(new OpenIDStrategy({
@@ -345,7 +355,9 @@ router.post('/', async function(req, res, next) {
           return cb(null, claims);
         }));
 
-      res.redirect('/setup');
+      res.render('setup', {
+        success: true
+      });
 
     });
   }
