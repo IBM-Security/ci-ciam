@@ -3,7 +3,7 @@
 <Email id="default">
     <Subject>
       <Value>
-        Account deleted
+        TrustMe account deleted
       </Value>
     </Subject>
 
@@ -13,7 +13,7 @@
 <!-- Template file path: templates/notifications/user_management/profile/default/account_deleted_email.xml  -->
             <head>
             	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    		    <title>Account Deleted</title>
+    		    <title>TrustMe account deleted</title>
     		</head>
     	   <body>
            <div style="font-family: 'Helvetica neue', sans-serif;">
@@ -26,10 +26,10 @@
              </table>
           </div>
           <div style="font-family: 'Helvetica neue', sans-serif; font-size: 14px; padding: 10px 64px 64px 64px; color: #121212;">
-                <p>Your account <b>@USERNAME@</b> was deleted for subscription <b><a style="text-decoration: none;color: #000000;">@TENANT@</a></b>.</p>
-                <p>Contact your system administrator, if you believe that this action was done in error.</p>	
+                <p>Your TrustMe account <b>@USERNAME@</b> has been deleted.</p>
+                <p>We're sorry to see you go and hope to welcome you back again some time.</p>
          </div>
-        </body>  	
+        </body>
         </html>
          ]]>
       </Value>

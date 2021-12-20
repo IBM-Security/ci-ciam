@@ -3,7 +3,7 @@
 <Email id="default">
     <Subject>
       <Value>
-        User profile modified
+        TrustMe profile modified
       </Value>
     </Subject>
 
@@ -13,7 +13,7 @@
 <!-- Template file path: templates/notifications/user_management/profile/default/user_profile_modified_email.xml  -->
              <head>
             	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    		    <title>User profile modified</title>
+    		    <title>TrustMe profile modified</title>
     		</head>
     	   <body>
            <div style="font-family: 'Helvetica neue', sans-serif;">
@@ -26,14 +26,14 @@
              </table>
           </div>
           <div style="font-family: 'Helvetica neue', sans-serif; font-size: 14px; padding: 10px 64px 64px 64px; color: #121212;">
-            <p style="padding-bottom: 12px;font-size: 16px">Your account information was changed. </p>    
-            <p style="padding-bottom: 12px; line-height: 24px">You are receiving this email because one or more pieces of information related to your account, <a href="#" style="color: #4178BE;">@USERNAME@</a>, were updated for subscription <b><a style="text-decoration: none; color: #000000;">@TENANT@</a></b>. Please contact your system administrator if you did not request these changes.</p>
+            <p style="padding-bottom: 12px;font-size: 16px">Your account information was changed. </p>
+            <p style="padding-bottom: 12px; line-height: 24px">You are receiving this email because one or more pieces of information related to your account, <a href="#" style="color: #4178BE;">@USERNAME@</a>, have been updated. Please contact us if you did not request these changes.</p>
             <p style="font-size: 14px; line-height: 24px">
-             <b>Changed Information:</b><br /> 
+             <b>Changed Information:</b><br />
              <table style="border-spacing: 0px; font-size: 14px; line-height: 24px; text-align: left;">
-                @ATTRS_TABLEROWS@  
+                @ATTRS_TABLEROWS@
             </table>
-         </p>            
+         </p>
          </div>
          </body>
 		</html>

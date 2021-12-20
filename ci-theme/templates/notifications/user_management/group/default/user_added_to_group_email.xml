@@ -28,9 +28,9 @@
           <div style="font-family: 'Helvetica neue', sans-serif; font-size: 14px; padding: 10px 64px 64px 64px; color: #121212;">
              <p>Your account <b>@USERNAME@</b> was added to the group: <b>@GROUPNAME@</b> for subscription <b><a style="text-decoration: none; color: #000000;">@TENANT@</a></b>.</p>
          </div>
-        </body>  	
+        </body>
           </html>
-         ]]>      
+         ]]>
       </Value>
     </Message>
 </Email>

@@ -392,6 +392,9 @@ function deleteUser(userId, accessToken, callback) {
     url: process.env.OIDC_CI_BASE_URI + `/v2.0/Users/${userId}`,
     headers: {
       'Authorization': `Bearer ${accessToken}`
+    },
+    'params': {
+      'themeId': process.env.THEME_ID
     }
   };
 
@@ -439,7 +442,10 @@ function changePassword(accessToken, pwVars, callback) {
         'Accept': 'application/scim+json',
         'Authorization': `Bearer ${accessToken}`
       },
-      data: data
+      data: data,
+      'params': {
+        'themeId': process.env.THEME_ID
+      }
     };
 
     console.log("Options JSON:", options)
@@ -922,7 +928,10 @@ function createUser(payload, callback) {
       'Content-Type': 'application/scim+json',
       'Authorization': `Bearer ${accessToken}`
     },
-    'data': payload
+    'data': payload,
+    'params': {
+      'themeId': process.env.THEME_ID
+    }
   }
 
   console.log("Create user:" + payload.userName);
@@ -962,11 +971,11 @@ async function applyPolicyThemeSources(policyid,themeId,sources,app,accessToken)
   // Convert app icon to base64. Path is in .env's APP_ICON_PATH
   try {
     app.customIcon="data:image/png;base64," + fs.readFileSync(process.env.APP_ICON_PATH, 'base64');
-  } catch (e) { 
+  } catch (e) {
     console.log("Failed to read & convert application icon");
     console.log(e.stack);
   }
-  
+
   app.description=process.env.APP_DESCRIPTION;
 
   app.providers.oidc.applicationUrl = process.env.OIDC_APP_URL;
