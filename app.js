@@ -151,26 +151,22 @@ app.get('/login', passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes
 }));
-app.get('/login-linkedin', passport.authenticate('openidconnect', {
+app.get('/login-linkedin', function(req,_res,next) {
+  req.session.nextUrl = "/open-account";
+  next();
+}, passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes,
   loginHint: `{"realm":"www.linkedin.com"}`
 }));
-app.get('/login-google', passport.authenticate('openidconnect', {
+app.get('/login-google', function(req,_res,next) {
+  req.session.nextUrl = "/open-account";
+  next();
+}, passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes,
   loginHint: `{"realm":"www.google.com"}`
 }));
-// app.get('/new-linkedin', passport.authenticate('openidconnect', {
-//   successReturnToOrRedirect: "/open-account",
-//   scope: 'email profile',
-//   login_hint: `{"realm":"www.linkedin.com"}`
-// }));
-// app.get('/new-google', passport.authenticate('openidconnect', {
-//   successReturnToOrRedirect: "/open-account",
-//   scope: 'email profile',
-//   login_hint: `{"realm":"www.google.com"}`
-// }));
 
 // Callback handler that IBM will redirect back to
 // after successfully authenticating the user
@@ -180,7 +176,12 @@ app.get('/oauth/callback', passport.authenticate(
     failureRedirect: '/'
   }),
   function(req,res) {
-    res.redirect('/app/profile');
+    let url = '/app/profile';
+    if (req.session.nextUrl) {
+      url = req.session.nextUrl;
+      delete req.session.nextUrl;
+    }
+    res.redirect(url);
   });
 
 // Destroy both the local session and
