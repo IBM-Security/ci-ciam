@@ -154,12 +154,12 @@ app.get('/login', passport.authenticate('openidconnect', {
 app.get('/login-linkedin', passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes,
-  login_hint: `{"realm":"www.linkedin.com"}`
+  loginHint: `{"realm":"www.linkedin.com"}`
 }));
 app.get('/login-google', passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes,
-  login_hint: `{"realm":"www.google.com"}`
+  loginHint: `{"realm":"www.google.com"}`
 }));
 // app.get('/new-linkedin', passport.authenticate('openidconnect', {
 //   successReturnToOrRedirect: "/open-account",
