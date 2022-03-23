@@ -702,7 +702,7 @@ async function createGroup(groupName, accessToken) {
 async function getPolicyId(name, accessToken) {
     var options = {
       'method': 'get',
-      'url': process.env.OIDC_CI_BASE_URI + `/v1.0/policyvault/accesspolicy?search=name = ${name}`,
+      'url': process.env.OIDC_CI_BASE_URI + `/v3.0/policyvault/accesspolicy?search=name = ${name}`,
       'headers': {
         'Content-Type': 'application/scim+json',
         'Authorization': `Bearer ${accessToken}`
@@ -814,53 +814,63 @@ async function getApplication(appName, accessToken) {
 
 async function createMfaPolicy(policyName, mfaGroup, accessToken) {
   var data = {
-    "description": "2FA Policy for Demo.  Added via API",
-    "format": "json",
-    "name": policyName,
-    "rules": [{
-      "alwaysRun": false,
-      "conditions": {
-        "subjectAttributes": {
-          "attributes": [{
-            "name": "groupIds",
-            "opCode": "EQ",
-            "values": [ mfaGroup ]
-          }]
-        }
-      },
-      "id": random_id(),
-      "name": `2FA for ${mfaGroup}`,
-      "result": {
-        "action": {
-          "allowAccess": false,
-          "factorFrequency": "ALWAYS",
-          "requireFactor": true
-        },
-        "authnMethods": ["urn:ibm:security:authentication:asf:macotp"],
-        "serverSideActions": []
-      }
-    }, {
-      "alwaysRun": false,
-      "conditions": {},
-      "id": random_id(),
-      "name": "Default rule",
-      "result": {
-        "action": {
-          "allowAccess": true,
-          "requireFactor": false
-        },
-        "authnMethods": ["urn:ibm:security:authentication:asf:macotp"],
-        "serverSideActions": []
-      }
-    }],
-    "schemaVersion": "urn:access:policy:3.0:schema"
+	  "containsFirstFactor":false,
+	  "description":"2FA Policy for Demo.  Added via API",
+	  "enforcementType":"fedSSO",
+	  "name": policyName,
+	  "rules":[
+	 	{
+			"alwaysRun":false,
+			"conditions":{
+				"subjectAttributes":{
+					"attributes":[
+						{
+							"name":"groupIds",
+							"opCode":"IN",
+							"values":[ mfaGroup ]
+						}
+					]
+				}
+			},
+			"firstFactor":false,
+			"id": random_id(),
+			"name": `2FA for ${mfaGroup}`,
+			"result":{
+				"action":{
+					"allowAccess":false,
+					"requireFactor":false
+				},
+				"authnMethods":["urn:ibm:security:authentication:asf:macotp"],
+				"extendedAction":{"action":"ACTION_MFA_ALWAYS"},
+				"serverSideActions":[]
+			}
+		},
+		{
+			"alwaysRun":false,
+			"conditions":{},
+			"firstFactor":false,
+			"id": random_id(),
+			"name":"Default rule",
+			"result":{
+				"action":{
+					"allowAccess":false,
+					"requireFactor":false
+				},
+				"authnMethods":["urn:ibm:security:authentication:asf:macotp"],
+				"extendedAction":{"action":"ACTION_ALLOW"},
+				"serverSideActions":[]
+			}
+		}
+	  ],
+	  "schemaVersion":"urn:access:policy:4.0:schema"
   }
+
 
   console.log("Policy creation information:", data)
 
   var options = {
     'method': 'post',
-    'url': process.env.OIDC_CI_BASE_URI + '/v1.0/policyvault/accesspolicy',
+    'url': process.env.OIDC_CI_BASE_URI + '/v3.0/policyvault/accesspolicy',
     'headers': {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${accessToken}`
