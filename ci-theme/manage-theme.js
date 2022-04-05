@@ -243,8 +243,11 @@ async function updateMyTheme(accessToken,themes,themeName) {
   async function downloadMyTheme(accessToken,themes,themeName) {
       // Only async functions can call other functions with "await"
       // themes contains the parsed JSON content of the body of the response to GET /v1.0/branding/themes
+
+      // Add master theme to allow download.
+      themes.themeRegistrations.push({"name":"master","id":"master"});
       themefound=false;
-      for (i=0;i < themes.total;i++) {
+      for (i=0;i <= themes.total;i++) {
         reg=themes.themeRegistrations[i];
         if (reg.name == themeName) {
           // There's an existing theme for this app: download this theme
