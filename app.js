@@ -54,31 +54,36 @@ var openaccount = require('./routes/open-account');
 var accountclaim = require('./routes/account-claim');
 var consent = require('./routes/consent');
 
-try {
-// Configure the OpenId Connect Strategy
-// with credentials obtained from env details (.env)
-passport.use(new OpenIDStrategy({
-    issuer: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default',
-    clientID: process.env.OIDC_CLIENT_ID, // from .env file
-    clientSecret: process.env.OIDC_CLIENT_SECRET, // from .env file
-    authorizationURL: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/authorize', // this won't change
-    userInfoURL: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/userinfo', // this won't change
-    tokenURL: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/token', // this won't change
-    callbackURL: process.env.OIDC_REDIRECT_URI, // from .env file
-    passReqToCallback: true
-  },
-  function(req, issuer, claims, acr, idToken, accessToken, params, cb) {
-    console.log('issuer:', issuer);
-    console.log('claims:', claims);
-    console.log('acr:', acr);
-    console.log('idtoken:', idToken);
-    console.log('accessToken:', accessToken);
-    console.log('params:', params);
+let oidcIssuer = process.env.OIDC_ISSUER;
+if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+  oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+}
 
-    req.session.accessToken = accessToken;
-    req.session.userId = claims.id;
-    req.session.loggedIn = true;
-    return cb(null, claims);
+try {
+  // Configure the OpenId Connect Strategy
+  // with credentials obtained from env details (.env)
+  passport.use(new OpenIDStrategy({
+      issuer: oidcIssuer,
+      clientID: process.env.OIDC_CLIENT_ID, // from .env file
+      clientSecret: process.env.OIDC_CLIENT_SECRET, // from .env file
+      authorizationURL: oidcIssuer + '/authorize', // this won't change
+      userInfoURL: oidcIssuer + '/userinfo', // this won't change
+      tokenURL: oidcIssuer + '/token', // this won't change
+      callbackURL: process.env.OIDC_REDIRECT_URI, // from .env file
+      passReqToCallback: true
+    },
+    function(req, issuer, claims, acr, idToken, accessToken, params, cb) {
+      console.log('issuer:', issuer);
+      console.log('claims:', claims);
+      console.log('acr:', acr);
+      console.log('idtoken:', idToken);
+      console.log('accessToken:', accessToken);
+      console.log('params:', params);
+
+      req.session.accessToken = accessToken;
+      req.session.userId = claims.id;
+      req.session.loggedIn = true;
+      return cb(null, claims);
   }));
 } catch (e) {
   console.log("OIDC initialization failed.",e);
@@ -197,7 +202,7 @@ app.get('/logout', function(req, res) {
 
   var options = {
     method: 'post',
-    url: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/revoke',
+    url: oidcIssuer + '/revoke',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },

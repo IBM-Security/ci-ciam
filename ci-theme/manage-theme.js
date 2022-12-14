@@ -44,23 +44,28 @@ async function getAccessToken() {
   // get token to talk with Verify
   // returns the body of the POST call as an object
 
-    var data = {
-      grant_type: 'client_credentials',
-      client_id: process.env.API_CLIENT_ID,
-      client_secret: process.env.API_SECRET,
-    };
+  let oidcIssuer = process.env.OIDC_ISSUER;
+  if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+  }
 
-    var options = {
-      method: 'POST',
-      url: process.env.OIDC_CI_BASE_URI + '/v1.0/endpoint/default/token',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: qs.stringify(data)
-    };
+  var data = {
+    grant_type: 'client_credentials',
+    client_id: process.env.API_CLIENT_ID,
+    client_secret: process.env.API_SECRET,
+  };
 
-    var response = await axios(options);
-    return response.data;
+  var options = {
+    method: 'POST',
+    url: oidcIssuer + '/token',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify(data)
+  };
+
+  var response = await axios(options);
+  return response.data;
 }
 
 async function getThemesData(accessToken) {

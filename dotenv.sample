@@ -1,5 +1,6 @@
 # Your tenant URL.  You must set this.
 OIDC_CI_BASE_URI=https://xxxxxxxxxx.verify.ibm.com
+OIDC_ISSUER=https://xxxxxxxxxx.verify.ibm.com/oauth2
 
 # API Client for client_credentials flow
 # Give full permissions for auto-setup

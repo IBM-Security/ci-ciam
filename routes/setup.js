@@ -48,6 +48,47 @@ router.get('/', function(req, res, next) {
   }
 });
 
+router.post('/manual', function(request, response, next) {
+  console.log("Received:" + request.body);
+
+  process.env.API_CLIENT_ID = request.body.apiClientID;
+  process.env.API_SECRET = request.body.apiClientSecret;
+  process.env.OIDC_CLIENT_ID = request.body.clientID;
+  process.env.OIDC_CLIENT_SECRET = request.body.clientSecret;
+
+  if (request.body.eulaURL) {
+    process.env.EULA_URL = request.body.eulaURL;
+  }
+
+  if (request.body.eulaID) {
+    process.env.TERMS_PURPOSE_ID = request.body.eulaID;
+  }
+
+  if (request.body.marketingPurposeID) {
+    process.env.MARKETING_PURPOSE_ID = request.body.marketingPurposeID;
+  }
+
+  if (request.body.billingPurposeID) {
+    process.env.PAPERLESS_PURPOSE_ID = request.body.billingPurposeID;
+  }
+
+  if (request.body.readAccessTypeID) {
+    process.env.READ_ACCESS_TYPE = request.body.readAccessTypeID;
+  }
+
+  response.send({
+    "apiClientID": process.env.API_CLIENT_ID,
+    "apiClientSecret": process.env.API_SECRET,
+    "clientID": process.env.OIDC_CLIENT_ID,
+    "clientSecret": process.env.OIDC_CLIENT_SECRET,
+    "eulaID": process.env.TERMS_PURPOSE_ID,
+    "eulaURL": process.env.EULA_URL,
+    "marketingPurposeID": process.env.MARKETING_PURPOSE_ID,
+    "billingPurposeID": process.env.PAPERLESS_PURPOSE_ID,
+    "readAccessTypeID": process.env.READ_ACCESS_TYPE,
+  })
+});
+
 // Post from setup page
 router.post('/', async function(req, res, next) {
   if (process.env.ALLOW_DYNAMIC_SETUP == "false") {
@@ -170,15 +211,15 @@ router.post('/', async function(req, res, next) {
           console.log(e);
         }
 
-        var readAcessTypeId = await bbfn.getAccessTypeId(process.env.READ_ACCESS_TYPE, apiAccessToken);
+        var readAccessTypeId = await bbfn.getAccessTypeId(process.env.READ_ACCESS_TYPE, apiAccessToken);
 
         var marketingExists = await bbfn.purposeExists(process.env.MARKETING_PURPOSE_ID, apiAccessToken);
         if (!marketingExists) {
           await bbfn.createPurpose(
             process.env.MARKETING_PURPOSE_ID,
-            "3",
+            process.env.EMAIL_ATTRIBUTE_ID,
             "A preference that indicates that the customer agrees with receiving information on promotions, new products, and personalized advice weekly.",
-            readAcessTypeId,
+            readAccessTypeId,
             process.env.DEFAULT_ACCESS_TYPE,
             apiAccessToken);
         }
@@ -187,9 +228,9 @@ router.post('/', async function(req, res, next) {
         if (!paperlessExists) {
           await bbfn.createPurpose(
             process.env.PAPERLESS_PURPOSE_ID,
-            "3",
+            process.env.EMAIL_ATTRIBUTE_ID,
             "A preference that indicates that the customer agrees to paperless billing.",
-            readAcessTypeId,
+            readAccessTypeId,
             process.env.DEFAULT_ACCESS_TYPE,
             apiAccessToken);
         }
@@ -198,7 +239,7 @@ router.post('/', async function(req, res, next) {
           await bbfn.createDpcmRule(
             "Paperless Billing",
             [{
-              "purposeId": "paperless-billing"
+              "purposeId": process.env.PAPERLESS_PURPOSE_ID
             }],
             "ASSENT_EXPLICIT",
             true,
@@ -213,7 +254,7 @@ router.post('/', async function(req, res, next) {
           await bbfn.createDpcmRule(
             "Communication-Europe",
             [{
-              "purposeId": "communications",
+              "purposeId": process.env.MARKETING_PURPOSE_ID,
               "geography": {
                 "continentCode": "EU",
                 "countryCode": "",
@@ -331,13 +372,18 @@ router.post('/', async function(req, res, next) {
 
       }
 
+      let oidcIssuer = process.env.OIDC_ISSUER;
+      if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+        oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+      }
+
       passport.use(new OpenIDStrategy({
-          issuer: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default',
+          issuer: oidcIssuer,
           clientID: process.env.OIDC_CLIENT_ID, // from .env file
           clientSecret: process.env.OIDC_CLIENT_SECRET, // from .env file
-          authorizationURL: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/authorize', // this won't change
-          userInfoURL: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/userinfo', // this won't change
-          tokenURL: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/token', // this won't change
+          authorizationURL: oidcIssuer + '/authorize', // this won't change
+          userInfoURL: oidcIssuer + '/userinfo', // this won't change
+          tokenURL: oidcIssuer + '/token', // this won't change
           callbackURL: process.env.OIDC_REDIRECT_URI, // from .env file
           passReqToCallback: true
         },

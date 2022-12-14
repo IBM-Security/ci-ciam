@@ -21,10 +21,14 @@ function random_id() {
 
 function oidcIdToken(req, callback) {
   console.log(req.session.accessToken);
+  let oidcIssuer = process.env.OIDC_ISSUER;
+  if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+  }
 
   options = {
     method: 'GET',
-    url: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/userinfo',
+    url: oidcIssuer + '/userinfo',
     headers: {'Authorization': 'Bearer ' + req.session.accessToken}
   }
 
@@ -40,9 +44,14 @@ function oidcIdToken(req, callback) {
 }
 
 function authorize(clientID, clientSecret, callback) {
+  let oidcIssuer = process.env.OIDC_ISSUER;
+  if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+  }
+
   var options = {
     method: 'POST',
-    url: process.env.OIDC_CI_BASE_URI + '/v1.0/endpoint/default/token',
+    url: oidcIssuer + '/token',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
@@ -738,10 +747,14 @@ async function createApplication(appName, redirectUrl, accessToken) {
     }
 
     console.log("App creation information:", data)
+    let oidcIssuer = process.env.OIDC_ISSUER;
+    if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+      oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+    }
 
     var options = {
       'method': 'post',
-      'url': process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/client_registration',
+      'url': oidcIssuer + '/client_registration',
       'headers': {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`

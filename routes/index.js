@@ -63,9 +63,14 @@ router.get('/app/profile', function(req, res, next) {
         }
       }
 
+      let oidcIssuer = process.env.OIDC_ISSUER;
+      if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+        oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+      }
+
       var options = {
         method: 'GET',
-        url: process.env.OIDC_CI_BASE_URI + '/oidc/endpoint/default/userinfo',
+        url: oidcIssuer + '/userinfo',
         headers: {
           'Authorization': `Bearer ${userAccessToken}`
         }

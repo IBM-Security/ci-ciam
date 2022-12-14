@@ -38,7 +38,7 @@ he NodeJS app's login button calls /login. This NodeJS route is defined in app.j
 	
 	Calls to Verify: 
 	
-	* /oidc/endpoint/default/authorize to handle the OIDC authentication flow
+	* /oauth2/authorize to handle the OIDC authentication flow
 	* /idaas/mtfim/sps/idaas/login to authentication the user
 	* /authsvc/mtfim/sps/authsvc to post the username & password for authentication
 	* /idaas/mtfim/sps/idaas/login/google for Google login
@@ -66,7 +66,7 @@ A logout consist of a number of actions:
 	
 	Calls to Verify: 
 	
-	* /oidc/endpoint/default/revoke to revoke tokens
+	* /oauth2/revoke to revoke tokens
 	* /idaas/mtfim/sps/idaas/logout to logout the user's session.
 
 	Theme files:
@@ -130,7 +130,7 @@ index.js gather the data, while the view  in **views/insurance/profile.hbs** ren
 		
 	Calls to Verify: 
 	
-	* /oidc/endpoint/default/userinfo to get the user's id and other OIDC claims
+	* /oauth2/userinfo to get the user's id and other OIDC claims
 	* /v2.0/Me API to get the full user profile 
 	* /v1.0/attributes API to get the user's custom attributes such as 'car'
 	* /dpcm/v1.0/privacy/data-usage-approval provides the data usage approval to retrieve if the user has accepted the terms, and to get the opt-in/opt-out status of the 2 'purposes' 

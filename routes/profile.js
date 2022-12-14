@@ -11,7 +11,12 @@ router.get('/', async function(req, res, next) {
     }
   }
 
-  var response = await axios.get(process.env.OIDC_CI_BASE_URI+'/oidc/endpoint/default/userinfo', options);
+  let oidcIssuer = process.env.OIDC_ISSUER;
+  if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+  }
+
+  var response = await axios.get(oidcIssuer + '/userinfo', options);
   console.log('profile.js: ---- User ID token ----');
   var userinfo = response.data;
   var userinfo_string = JSON.stringify(userinfo, null, 2);
