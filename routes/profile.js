@@ -13,7 +13,7 @@ router.get('/', async function(req, res, next) {
 
   let oidcIssuer = process.env.OIDC_ISSUER;
   if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
-    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oidc/endpoint/default";
   }
 
   var response = await axios.get(oidcIssuer + '/userinfo', options);

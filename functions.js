@@ -23,7 +23,7 @@ function oidcIdToken(req, callback) {
   console.log(req.session.accessToken);
   let oidcIssuer = process.env.OIDC_ISSUER;
   if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
-    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oidc/endpoint/default";
   }
 
   options = {
@@ -46,7 +46,7 @@ function oidcIdToken(req, callback) {
 function authorize(clientID, clientSecret, callback) {
   let oidcIssuer = process.env.OIDC_ISSUER;
   if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
-    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+    oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oidc/endpoint/default";
   }
 
   var options = {
@@ -749,7 +749,7 @@ async function createApplication(appName, redirectUrl, accessToken) {
     console.log("App creation information:", data)
     let oidcIssuer = process.env.OIDC_ISSUER;
     if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
-      oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+      oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oidc/endpoint/default";
     }
 
     var options = {

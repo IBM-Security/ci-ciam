@@ -56,7 +56,8 @@ var consent = require('./routes/consent');
 
 let oidcIssuer = process.env.OIDC_ISSUER;
 if (!process.env.OIDC_ISSUER || process.env.OIDC_ISSUER == "") {
-  oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oauth2";
+  // for backward compatibility
+  oidcIssuer = process.env.OIDC_CI_BASE_URI + "/oidc/endpoint/default";
 }
 
 try {
@@ -114,7 +115,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'secret sause',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    secure: 'auto',
+    httpOnly: true
+  }
 }))
 
 // Initialize Passport
