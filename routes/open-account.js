@@ -165,7 +165,7 @@ router.post('/car', function(req, res, next) {
                 console.log("Create user:", req.session.userEmail)
                 pbody = response.data;
                 console.log("Response code:", response.statusCode);
-                console.log("Create response:", JSON.stringify(pbody));
+                console.log("Create response:", JSON.stringify(body));
                 if(response.status == 201){
                   //success
                   res.render('insurance/open-account-car-success', {
