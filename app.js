@@ -84,6 +84,7 @@ try {
       req.session.accessToken = accessToken;
       req.session.userId = claims.id;
       req.session.loggedIn = true;
+      req.session.save();
       return cb(null, claims);
   }));
 } catch (e) {
@@ -116,10 +117,7 @@ app.use(session({
   secret: 'secret sause',
   resave: false,
   saveUninitialized: true,
-  cookie: {
-    secure: 'auto',
-    httpOnly: true
-  }
+  cookie: { path: '/', maxAge: 120 * 1000, secure: false }
 }))
 
 // Initialize Passport
@@ -216,9 +214,9 @@ app.get('/logout', function(req, res) {
 
   axios(options).then(response => {
     console.log('Session Revoked at Verify. Status',response.status);
-    req.session.loggedIn = false;
     console.log('process.env.THEME_ID in /logout is: ' + process.env.THEME_ID);
     req.session.loggedIn = false;
+    req.session.save();
     res.redirect(process.env.OIDC_CI_BASE_URI + '/idaas/mtfim/sps/idaas/logout' + '?themeId=' + process.env.THEME_ID);
   });
 });

@@ -398,6 +398,7 @@ router.post('/', async function(req, res, next) {
           req.session.accessToken = accessToken;
           req.session.userId = claims.id;
           req.session.loggedIn = true;
+          req.session.save();
           return cb(null, claims);
         }));
 
