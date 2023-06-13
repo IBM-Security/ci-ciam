@@ -4,6 +4,7 @@ var axios = require('axios');
 var _ = require('lodash');
 var bbfn = require('../functions.js');
 var router = express.Router();
+var store = null;
 
 var DPCMClient = require('../lib/dpcm/dpcmClient');
 var dpcmClient = new DPCMClient({
@@ -21,6 +22,9 @@ router.get('/', function(req, res, next) {
 router.get('/status', function(req, res, next) {
   var loggedIn = ((req.session.loggedIn) ? true : false);
   const VERSION = "REL-20230614";
+  store.all(function(err, sessions) {
+    debug(`SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
+  })
   res.send(JSON.stringify({
     "version": VERSION,
     "isLoggedIn": loggedIn,
@@ -734,4 +738,10 @@ router.post('/app/enroll/sms/verify', function(req, res, next) {
     }
   });
 });
-module.exports = router;
+
+module.exports = {
+  router: router,
+  setStore: function setStore(s) {
+    store = s;
+  }
+};

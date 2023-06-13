@@ -47,7 +47,8 @@ hbs.registerHelper('formatAttribute', function(attribute) {
 var passport = require('passport')
 var OpenIDStrategy = require('passport-openidconnect').Strategy
 
-var index = require('./routes/index');
+var { router, setStore } = require('./routes/index');
+var index = router;
 var setup = require('./routes/setup');
 var profile = require('./routes/profile');
 var openaccount = require('./routes/open-account');
@@ -119,8 +120,10 @@ if (isProxied) {
   app.set("trust proxy", 1);
 }
 
+var store = new session.MemoryStore();
 app.use(session({
   secret: 'secret sause',
+  store: store,
   name: 'ciam.sid',
   resave: true,
   saveUninitialized: true,
@@ -128,6 +131,7 @@ app.use(session({
   cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: isProxied, httpOnly: false }
 }))
 
+setStore(store);
 console.log(`isProxied=${isProxied}`);
 
 // Initialize Passport
