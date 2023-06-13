@@ -121,9 +121,10 @@ if (isProxied) {
 
 app.use(session({
   secret: 'secret sause',
+  name: 'ciam.sid',
   resave: false,
   saveUninitialized: true,
-  //proxy: isProxied,
+  proxy: isProxied,
   cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: isProxied, httpOnly: false }
 }))
 
