@@ -125,16 +125,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 // so were using express-session for this example
 const isProxied = process.env.PROXY == "true";
 if (isProxied) {
-//  app.set("trust proxy", 1);
+  app.set("trust proxy", 1);
 }
 
 var store = new session.MemoryStore();
 app.use(session({
   secret: 'secret sause',
   store: store,
-  resave: true,
+  resave: false,
   saveUninitialized: true,
-  //proxy: isProxied,
+  proxy: isProxied,
   cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false, domain: process.env.COOKIE_DOMAIN },
 }))
 
