@@ -132,7 +132,7 @@ var store = new session.MemoryStore();
 app.use(session({
   secret: 'secret sause',
   store: store,
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   //proxy: isProxied,
   cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false, sameSite: 'none' },
