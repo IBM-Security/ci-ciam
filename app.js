@@ -86,11 +86,7 @@ try {
       req.session.accessToken = accessToken;
       req.session.userId = claims.id;
       req.session.loggedIn = true;
-      req.session.save(function(err) {
-        if (err) {
-          console.log("Unable to save the session");
-        }
-      });
+     
       console.log(`Saved session - ${req.session.sessionID}`);
       store.all(function(err, sessions) {
         debug(`/oauth/callback - SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
@@ -236,7 +232,6 @@ app.get('/logout', function(req, res) {
     console.log('Session Revoked at Verify. Status',response.status);
     console.log('process.env.THEME_ID in /logout is: ' + process.env.THEME_ID);
     req.session.loggedIn = false;
-    req.session.save();
     res.redirect(process.env.OIDC_CI_BASE_URI + '/idaas/mtfim/sps/idaas/logout' + '?themeId=' + process.env.THEME_ID);
   });
 });
