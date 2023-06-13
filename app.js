@@ -114,12 +114,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport requires session to persist the authentication
 // so were using express-session for this example
+const isProxied = process.env.PROXY == "true";
 app.use(session({
   secret: 'secret sause',
   resave: false,
   saveUninitialized: true,
-  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: true }
+  proxy: isProxied,
+  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: isProxied }
 }))
+
+console.log(`isProxied=${isProxied}`);
 
 // Initialize Passport
 app.use(passport.initialize());
