@@ -135,7 +135,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   //proxy: isProxied,
-  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false, sameSite: 'none' },
+  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false, domain: process.env.COOKIE_DOMAIN },
 }))
 
 setStore(store);
