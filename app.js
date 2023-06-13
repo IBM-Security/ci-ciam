@@ -87,6 +87,9 @@ try {
       req.session.loggedIn = true;
       req.session.save();
       console.log("Saved session");
+      store.all(function(err, sessions) {
+        debug(`/oauth/callback - SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
+      })
       return cb(null, claims);
   }));
 } catch (e) {

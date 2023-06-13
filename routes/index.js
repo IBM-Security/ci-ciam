@@ -23,7 +23,7 @@ router.get('/status', function(req, res, next) {
   var loggedIn = ((req.session.loggedIn) ? true : false);
   const VERSION = "REL-20230614";
   store.all(function(err, sessions) {
-    debug(`SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
+    debug(`/status - SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
   })
   res.send(JSON.stringify({
     "version": VERSION,
@@ -49,6 +49,9 @@ router.get('/app/dashboard', function(req, res, next) {
 });
 
 router.get('/app/profile', function(req, res, next) {
+  store.all(function(err, sessions) {
+    debug(`/profile - SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
+  })
   var loggedIn = ((req.session.loggedIn) ? true : false);
   if (loggedIn) {
     var userAccessToken = req.session.accessToken;
