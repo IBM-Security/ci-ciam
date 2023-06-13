@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var bbfn = require('./functions.js');
 var hbs =  require('hbs');
+var debug = require('debug')('ci-ciam:app');
 
 // register new function for handlebars
 hbs.registerHelper('formatDate', function(badDate) {
