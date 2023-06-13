@@ -17,6 +17,14 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/status', function(req, res, next) {
+  var loggedIn = ((req.session.loggedIn) ? true : false);
+  const VERSION = "REL-20230613";
+  res.send(JSON.stringify({
+    "version": VERSION,
+    "isLoggedIn": loggedIn,
+  }));
+});
 router.get('/app/downloadme', function(req, res, next) {
   console.log("Download data request from:", req.session.userprofile.id)
   //console.log("We have data", req.session.userprofile)
