@@ -118,7 +118,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-app.use(cookieParser());
+app.use(cookieParser('secret sause'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport requires session to persist the authentication
