@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('auth-flow:server');
+var debug = require('debug')('ci-ciam:www');
 var http = require('http');
 
 /**

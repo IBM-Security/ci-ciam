@@ -1,4 +1,5 @@
 var express = require('express');
+var debug = require('debug')('ci-ciam:index');
 var axios = require('axios');
 var _ = require('lodash');
 var bbfn = require('../functions.js');
