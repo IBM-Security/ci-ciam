@@ -126,15 +126,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 const isProxied = process.env.PROXY == "true";
 
 var store = new session.MemoryStore();
-app.set("trust proxy", 1);
+//app.set("trust proxy", 1);
 app.use(session({
   secret: 'secret sause',
   store: store,
   resave: false,
   saveUninitialized: true,
-  name: 'ciam-sid',
+  name: 'ciam.sid',
   //proxy: isProxied,
-  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false, sameSite: (isProxied) ? 'none' : 'lax' },
+  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false },
 }))
 
 setStore(store);
