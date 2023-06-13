@@ -86,8 +86,12 @@ try {
       req.session.accessToken = accessToken;
       req.session.userId = claims.id;
       req.session.loggedIn = true;
-      req.session.save();
-      console.log("Saved session");
+      req.session.save(function(err) {
+        if (err) {
+          console.log("Unable to save the session");
+        }
+      });
+      console.log(`Saved session - ${req.session.sessionID}`);
       store.all(function(err, sessions) {
         debug(`/oauth/callback - SESSIONS:\n${JSON.stringify(sessions, null, 2)}`);
       })
