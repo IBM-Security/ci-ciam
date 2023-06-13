@@ -215,6 +215,7 @@ router.get('/app/profile', function(req, res, next) {
       });
     });
   } else {
+    debug(`Request headers:\n${JSON.stringify(req.headers, null, 2)}`);
     res.redirect('/login');
   }
 });
