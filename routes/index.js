@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/status', function(req, res, next) {
   var loggedIn = ((req.session.loggedIn) ? true : false);
-  const VERSION = "REL-20230613";
+  const VERSION = "REL-20230614";
   res.send(JSON.stringify({
     "version": VERSION,
     "isLoggedIn": loggedIn,

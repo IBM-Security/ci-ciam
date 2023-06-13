@@ -85,6 +85,7 @@ try {
       req.session.userId = claims.id;
       req.session.loggedIn = true;
       req.session.save();
+      console.log("Saved session");
       return cb(null, claims);
   }));
 } catch (e) {
@@ -117,7 +118,7 @@ app.use(session({
   secret: 'secret sause',
   resave: false,
   saveUninitialized: true,
-  cookie: { path: '/', maxAge: 120 * 1000, secure: false }
+  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: true }
 }))
 
 // Initialize Passport
