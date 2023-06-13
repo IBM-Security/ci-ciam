@@ -130,7 +130,7 @@ app.use(session({
   saveUninitialized: true,
   name: 'ciam.sid',
   //proxy: isProxied,
-  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: false, httpOnly: false },
+  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: isProxied, httpOnly: true },
 }))
 
 setStore(store);
