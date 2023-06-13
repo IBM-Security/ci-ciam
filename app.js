@@ -122,7 +122,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const isProxied = process.env.PROXY == "true";
 
 var store = new session.MemoryStore();
-//app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 app.use(session({
   secret: 'secret sause',
   store: store,
