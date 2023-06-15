@@ -98,6 +98,7 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
+const SESSION_SECRET = process.env.SESSION_SECRET || 'super-secret-key';
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
@@ -107,18 +108,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-app.use(cookieParser());
+app.use(cookieParser(SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Passport requires session to persist the authentication
-// so were using express-session for this example
 app.use(session({
-  secret: 'secret sause',
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
     secure: 'auto',
-    httpOnly: true
+    httpOnly: true,
   }
 }))
 
@@ -159,7 +158,8 @@ if (process.env.SEND_PRIVACY_SCOPES == "true") {
 // they will be returned to the callback handler below
 app.get('/login', passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
-  scope: scopes
+  scope: scopes,
+  keepSessionInfo: true,
 }));
 app.get('/login-linkedin', function(req,_res,next) {
   req.session.nextUrl = "/open-account";
@@ -167,7 +167,8 @@ app.get('/login-linkedin', function(req,_res,next) {
 }, passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes,
-  loginHint: `{"realm":"www.linkedin.com"}`
+  loginHint: `{"realm":"www.linkedin.com"}`,
+  keepSessionInfo: true,
 }));
 app.get('/login-google', function(req,_res,next) {
   req.session.nextUrl = "/open-account";
@@ -175,7 +176,8 @@ app.get('/login-google', function(req,_res,next) {
 }, passport.authenticate('openidconnect', {
   successReturnToOrRedirect: "/",
   scope: scopes,
-  loginHint: `{"realm":"www.google.com"}`
+  loginHint: `{"realm":"www.google.com"}`,
+  keepSessionInfo: true,
 }));
 
 // Callback handler that IBM will redirect back to
@@ -183,7 +185,8 @@ app.get('/login-google', function(req,_res,next) {
 app.get('/oauth/callback', passport.authenticate(
   'openidconnect',
   {
-    failureRedirect: '/'
+    failureRedirect: '/',
+    keepSessionInfo: true,
   }),
   function(req,res) {
     let url = '/app/profile';
