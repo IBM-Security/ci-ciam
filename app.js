@@ -114,7 +114,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-app.use(cookieParser('secret sause'));
+//app.use(cookieParser('secret sause'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport requires session to persist the authentication
@@ -122,15 +122,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 const isProxied = process.env.PROXY == "true";
 
 var store = new session.MemoryStore();
-app.set("trust proxy", 1);
+//app.set("trust proxy", 1);
 app.use(session({
-  secret: 'secret sause',
+  secret: process.env.SECRET || 'secret sause',
   store: store,
   resave: false,
   saveUninitialized: true,
   name: 'ciam.sid',
   //proxy: isProxied,
-  cookie: { path: '/', maxAge: 2 * 60 * 60 * 1000, secure: isProxied, httpOnly: true },
+  cookie: { 
+    path: '/', 
+    maxAge: 2 * 60 * 60 * 1000, 
+    //secure: isProxied, 
+    //httpOnly: true 
+  },
 }))
 
 setStore(store);
