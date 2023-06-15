@@ -124,11 +124,10 @@ const isProxied = process.env.PROXY == "true";
 var store = new session.MemoryStore();
 //app.set("trust proxy", 1);
 app.use(session({
-  secret: process.env.SECRET || 'secret sause',
+  secret: process.env.SESSION_SECRET || 'secret sause',
   store: store,
   resave: false,
-  saveUninitialized: false,
-  name: 'ciam.sid',
+  saveUninitialized: true,
   //proxy: isProxied,
   cookie: { 
     path: '/', 
