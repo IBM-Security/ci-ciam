@@ -127,7 +127,7 @@ app.use(session({
   secret: process.env.SECRET || 'secret sause',
   store: store,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   name: 'ciam.sid',
   //proxy: isProxied,
   cookie: { 
