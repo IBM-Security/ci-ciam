@@ -14,7 +14,7 @@
     "express": "^4.21.2",
     "express-handlebars": "^5.3.5",
     "express-session": "^1.18.2",
-    "form-data": "^4.0.0",
+    "form-data": "^4.0.4",
     "hbs": "^4.1.1",
     "lodash": "^4.17.21",
     "passport": "^0.6.0",
