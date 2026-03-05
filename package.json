@@ -12,7 +12,7 @@
     "cookie-parser": "~1.4.7",
     "dotenv": "^5.0.0",
     "express": "^4.22.1",
-    "express-handlebars": "^5.3.5",
+    "express-handlebars": "^8.0.6",
     "express-session": "^1.18.2",
     "form-data": "^4.0.4",
     "hbs": "^4.1.1",
